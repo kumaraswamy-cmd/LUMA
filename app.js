@@ -305,6 +305,16 @@ function initThemeSelector() {
             const themeName = group.getAttribute("data-theme-name");
             document.documentElement.setAttribute("data-theme", themeName);
             state.theme = themeName;
+
+            // Dynamically update mobile browser toolbar/status bar color for seamless PWA integration
+            const metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (metaTheme) {
+                let barColor = "#F5F4F0";
+                if (themeName === "sunset") barColor = "#FAF2EB";
+                else if (themeName === "aurora") barColor = "#F2FAF6";
+                else if (themeName === "cosmic") barColor = "#0A0A10";
+                metaTheme.setAttribute("content", barColor);
+            }
         });
     });
 }
