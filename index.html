@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>LUMA - Focus & Productivity</title>
+    <title>Taskly - Focus & Productivity</title>
     <!-- iOS & Android Web App Optimization -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Luma">
+    <meta name="apple-mobile-web-app-title" content="Taskly">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#FAF9F6">
     <link rel="stylesheet" href="style.css">
@@ -19,7 +19,7 @@
     <!-- Beautiful Google Login Screen Overlay -->
     <div id="login-screen" class="login-screen">
         <div class="login-card">
-            <div class="login-logo">LUMA</div>
+            <div class="login-logo">Taskly</div>
             <div class="login-mascot-container">
                 <div class="mascot-ball large">
                     <div class="mascot-eyes">
@@ -51,525 +51,537 @@
                 </div>
             </div>
             
-            <div class="login-footer">By continuing, you agree to Luma's terms and privacy policy.</div>
+            <div class="login-footer">By continuing, you agree to Taskly's terms and privacy policy.</div>
         </div>
     </div>
 
     <div class="desktop-container">
         
-        <!-- App Header (Image 1 & 2) -->
-        <header>
-            <div class="header-left">
-                <div class="stats-bubbles">
-                    <!-- Day Streak (Image 3 / Image 1 top left) -->
-                    <div class="stat-bubble" title="Current Day Streak">
-                        <span style="font-size: 15px;">🔥</span>
-                        <span id="header-streak-count">2</span>
-                    </div>
-                    <!-- Completed count (Image 3 / Image 1 top left) -->
-                    <div class="stat-bubble" title="Tasks Completed Today">
-                        <span style="font-size: 15px;">🌟</span>
-                        <span id="header-completed-count">10</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="header-right">
-                <!-- User Avatar picture from Google -->
-                <div id="user-avatar-bubble" class="circle-btn" style="background-size: cover; background-position: center; display: none;" title="User Profile"></div>
-                <!-- Action menu dots -->
-                <button class="circle-btn" id="action-menu-btn" title="More Options">•••</button>
-                <!-- Quick add plus -->
-                <button class="circle-btn" id="header-add-btn" title="Add Task">+</button>
-            </div>
-        </header>
-
-        <!-- Main Content Panel -->
-        <main>
-            
-            <!-- 1. DAILY PLANNER VIEW (Image 1) -->
-            <section id="daily-view" class="view active">
-                <h1 id="daily-day-title">Wednesday</h1>
-                
-                <!-- Weekly Calendar strip -->
-                <div class="calendar-slider">
-                    <div class="cal-day" data-day="17">
-                        <span class="day-lbl">S</span>
-                        <span class="day-num">17</span>
-                    </div>
-                    <div class="cal-day" data-day="18">
-                        <span class="day-lbl">M</span>
-                        <span class="day-num">18</span>
-                    </div>
-                    <div class="cal-day" data-day="19">
-                        <span class="day-lbl">T</span>
-                        <span class="day-num">19</span>
-                    </div>
-                    <div class="cal-day active" data-day="20">
-                        <span class="day-lbl">W</span>
-                        <span class="day-num">20</span>
-                    </div>
-                    <div class="cal-day" data-day="21">
-                        <span class="day-lbl">T</span>
-                        <span class="day-num">21</span>
-                    </div>
-                    <div class="cal-day" data-day="22">
-                        <span class="day-lbl">F</span>
-                        <span class="day-num">22</span>
-                    </div>
-                    <div class="cal-day" data-day="23">
-                        <span class="day-lbl">S</span>
-                        <span class="day-num">23</span>
-                    </div>
-                </div>
-
-                <!-- Onboarding helper banner -->
-                <div class="onboarding-banner" id="onboarding-banner">
-                    <button class="banner-close" id="close-banner-btn">&times;</button>
-                    <div class="banner-content">
-                        <div class="banner-title">Plan your week</div>
-                        <div class="banner-desc">Tell us a few things you'd like to get done this week</div>
-                    </div>
-                    <div class="banner-mascot">
-                        <div class="mascot-ball">
-                            <div class="mascot-eyes">
-                                <div class="mascot-eye"><div class="mascot-pupil"></div></div>
-                                <div class="mascot-eye"><div class="mascot-pupil"></div></div>
-                            </div>
-                            <div class="mascot-mouth"></div>
-                            <div class="mascot-hands">
-                                <div class="mascot-hand left"></div>
-                                <div class="mascot-hand right"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Time block sections -->
-                <div class="block-sections">
-                    
-                    <!-- ANYTIME BLOCK -->
-                    <div class="block-card" id="card-anytime">
-                        <div class="block-header">
-                            <div class="block-title-group">
-                                <span style="font-size: 14px;">🕒</span>
-                                <span class="block-badge badge-anytime">ANYTIME (<span class="count">0</span>)</span>
-                            </div>
-                            <span class="arrow">▼</span>
-                        </div>
-                        <div class="block-content">
-                            <div class="task-list" id="list-anytime">
-                                <!-- Dynamic tasks -->
-                            </div>
-                            <div class="quick-input-row">
-                                <input type="text" placeholder="Anytime today works" class="block-task-input" data-block="anytime">
-                                <button class="quick-add-btn">+</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- MORNING BLOCK -->
-                    <div class="block-card" id="card-morning">
-                        <div class="block-header">
-                            <div class="block-title-group">
-                                <span style="font-size: 14px;">🌅</span>
-                                <span class="block-badge badge-morning">MORNING (<span class="count">0</span>)</span>
-                            </div>
-                            <span class="arrow">▼</span>
-                        </div>
-                        <div class="block-content">
-                            <div class="task-list" id="list-morning">
-                                <!-- Dynamic tasks -->
-                            </div>
-                            <div class="quick-input-row">
-                                <input type="text" placeholder="What's on your morning list?" class="block-task-input" data-block="morning">
-                                <button class="quick-add-btn">+</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- AFTERNOON BLOCK -->
-                    <div class="block-card" id="card-afternoon">
-                        <div class="block-header">
-                            <div class="block-title-group">
-                                <span style="font-size: 14px;">☀️</span>
-                                <span class="block-badge badge-afternoon">AFTERNOON (<span class="count">0</span>)</span>
-                            </div>
-                            <span class="arrow">▼</span>
-                        </div>
-                        <div class="block-content">
-                            <div class="task-list" id="list-afternoon">
-                                <!-- Dynamic tasks -->
-                            </div>
-                            <div class="quick-input-row">
-                                <input type="text" placeholder="What's happening today?" class="block-task-input" data-block="afternoon">
-                                <button class="quick-add-btn">+</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- EVENING BLOCK -->
-                    <div class="block-card" id="card-evening">
-                        <div class="block-header">
-                            <div class="block-title-group">
-                                <span style="font-size: 14px;">🌙</span>
-                                <span class="block-badge badge-evening">EVENING (<span class="count">0</span>)</span>
-                            </div>
-                            <span class="arrow">▼</span>
-                        </div>
-                        <div class="block-content">
-                            <div class="task-list" id="list-evening">
-                                <!-- Dynamic tasks -->
-                            </div>
-                            <div class="quick-input-row">
-                                <input type="text" placeholder="End the day your way" class="block-task-input" data-block="evening">
-                                <button class="quick-add-btn">+</button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-
-            <!-- 2. PRIORITY TO-DO VIEW (Image 2) -->
-            <section id="todo-view" class="view">
-                <h1>To-do</h1>
-
-                <div class="block-sections">
-                    
-                    <!-- HIGH PRIORITY -->
-                    <div class="block-card" id="card-high">
-                        <div class="block-header">
-                            <div class="block-title-group">
-                                <span style="font-size: 12px;">▲</span>
-                                <span class="block-badge badge-high">HIGH (<span class="count">0</span>)</span>
-                            </div>
-                            <span class="arrow">▼</span>
-                        </div>
-                        <div class="block-content">
-                            <div class="task-list" id="list-high">
-                                <!-- Dynamic tasks -->
-                            </div>
-                            <div class="quick-input-row">
-                                <input type="text" placeholder="Add urgent items" class="priority-task-input" data-priority="high">
-                                <button class="quick-add-btn">+</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- MEDIUM PRIORITY -->
-                    <div class="block-card" id="card-medium">
-                        <div class="block-header">
-                            <div class="block-title-group">
-                                <span style="font-size: 12px;">●</span>
-                                <span class="block-badge badge-medium">MEDIUM (<span class="count">0</span>)</span>
-                            </div>
-                            <span class="arrow">▼</span>
-                        </div>
-                        <div class="block-content">
-                            <div class="task-list" id="list-medium">
-                                <!-- Dynamic tasks -->
-                            </div>
-                            <div class="quick-input-row">
-                                <input type="text" placeholder="Add normal tasks" class="priority-task-input" data-priority="medium">
-                                <button class="quick-add-btn">+</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- LOW PRIORITY -->
-                    <div class="block-card" id="card-low">
-                        <div class="block-header">
-                            <div class="block-title-group">
-                                <span style="font-size: 12px;">▼</span>
-                                <span class="block-badge badge-low">LOW (<span class="count">0</span>)</span>
-                            </div>
-                            <span class="arrow">▼</span>
-                        </div>
-                        <div class="block-content">
-                            <div class="task-list" id="list-low">
-                                <!-- Dynamic tasks -->
-                            </div>
-                            <div class="quick-input-row">
-                                <input type="text" placeholder="Add low priority tasks" class="priority-task-input" data-priority="low">
-                                <button class="quick-add-btn">+</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TO-DO (GENERAL) -->
-                    <div class="block-card" id="card-general">
-                        <div class="block-header">
-                            <div class="block-title-group">
-                                <span style="font-size: 12px;">■</span>
-                                <span class="block-badge badge-todo">TO-DO (<span class="count">0</span>)</span>
-                            </div>
-                            <span class="arrow">▼</span>
-                        </div>
-                        <div class="block-content">
-                            <div class="task-list" id="list-general">
-                                <!-- Dynamic tasks -->
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Global Add Task Input at bottom (Image 2) -->
-                <div class="global-input-container">
-                    <span style="font-size: 16px; color: var(--text-light);">✍️</span>
-                    <input type="text" id="global-todo-input" placeholder="Add it to your list">
-                    <button class="quick-add-btn" id="global-todo-add-btn">+</button>
-                </div>
-            </section>
-
-
-            <!-- 3. FOCUS TIMER VIEW (Image 5) -->
-            <section id="focus-view" class="view">
-                <h1>Focus</h1>
-
-                <div class="timer-container">
-                    <!-- Top control pills -->
-                    <div class="timer-header-btns">
-                        <button class="pill-btn" id="tune-in-btn">
-                            <span>🎵</span> Tune in
-                        </button>
-                        <button class="pill-btn" id="focus-settings-btn">
-                            <span>⏱️</span> Start focus
-                        </button>
-                    </div>
-
-                    <!-- Interactive radial timer -->
-                    <div class="circular-timer-wrapper">
-                        <svg class="timer-svg" width="240" height="240" viewBox="0 0 220 220">
-                            <!-- Background track circle -->
-                            <circle class="timer-bg-circle" cx="110" cy="110" r="100"></circle>
-                            <!-- Progress circle -->
-                            <circle id="timer-progress-bar" class="timer-progress-circle" cx="110" cy="110" r="100"></circle>
-                        </svg>
-                        
-                        <!-- Presets labeled around the circle (15, 30, 45, 60 mins) -->
-                        <div class="timer-presets">
-                            <span class="preset-tick preset-60" data-mins="60">60</span>
-                            <span class="preset-15 preset-tick" data-mins="15">15</span>
-                            <span class="preset-30 preset-tick" data-mins="30">30</span>
-                            <span class="preset-45 preset-tick" data-mins="45">45</span>
-                        </div>
-
-                        <!-- Inside time text indicator -->
-                        <div class="timer-text-overlay">
-                            <span class="timer-min-display" id="timer-minutes-text">15</span>
-                            <span class="timer-lbl-display">MINS</span>
-                        </div>
-                    </div>
-
-                    <!-- Play/Pause Controls -->
-                    <div class="timer-controls">
-                        <button class="play-pause-btn" id="timer-play-btn">
-                            <span id="play-btn-icon">▶</span> <span id="play-btn-text">Start</span>
-                        </button>
-                    </div>
-
-                    <!-- Audio soundscape drawer (Tune in) -->
-                    <div class="sound-panel" id="sound-drawer" style="display: none;">
-                        <div class="sound-panel-title">Ambient Soundscapes</div>
-                        <div class="sound-tracks">
-                            <div class="track-row" data-track="lofi">
-                                <div class="track-info">
-                                    <span>🎹</span>
-                                    <span>Lofi Study Session</span>
-                                </div>
-                                <button class="track-play-btn">▶</button>
-                            </div>
-                            <div class="track-row" data-track="rain">
-                                <div class="track-info">
-                                    <span>🌧️</span>
-                                    <span>Soft Evening Rain</span>
-                                </div>
-                                <button class="track-play-btn">▶</button>
-                            </div>
-                            <div class="track-row" data-track="forest">
-                                <div class="track-info">
-                                    <span>🌲</span>
-                                    <span>Nature Whispers</span>
-                                </div>
-                                <button class="track-play-btn">▶</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-
-            <!-- 4. STATS & PROFILE VIEW (Image 3) -->
-            <section id="stats-view" class="view">
-                <div class="profile-section">
-                    <!-- Profile User display -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <h1 style="margin: 0;">Kumar</h1>
-                        <div style="display: flex; gap: 8px;">
-                            <button class="circle-btn" title="Share statistics">📤</button>
-                            <button class="circle-btn" title="Settings">⚙️</button>
-                        </div>
-                    </div>
-
-                    <!-- Dynamic Theme Selector -->
-                    <div class="theme-selector-container">
-                        <div class="theme-title">Personalize Theme</div>
-                        <div class="theme-spheres">
-                            <div class="theme-sphere-group active" data-theme-name="mist">
-                                <div class="theme-sphere sphere-mist"></div>
-                                <span class="theme-name">Mist</span>
-                            </div>
-                            <div class="theme-sphere-group" data-theme-name="sunset">
-                                <div class="theme-sphere sphere-sunset"></div>
-                                <span class="theme-name">Sunset</span>
-                            </div>
-                            <div class="theme-sphere-group" data-theme-name="aurora">
-                                <div class="theme-sphere sphere-aurora"></div>
-                                <span class="theme-name">Aurora</span>
-                            </div>
-                            <div class="theme-sphere-group" data-theme-name="cosmic">
-                                <div class="theme-sphere sphere-cosmic"></div>
-                                <span class="theme-name">Cosmic</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Progress Cards Grid -->
-                    <div class="progress-grid">
-                        
-                        <!-- Streak tracker card -->
-                        <div class="stats-card">
-                            <div class="stats-icon-wrapper">
-                                <div class="streak-flame"></div>
-                            </div>
-                            <div class="stats-number" id="stats-streak-count">2</div>
-                            <div class="stats-lbl">Day Streak</div>
-                            <div class="stats-bar-outer">
-                                <div class="stats-bar-inner" id="streak-bar-progress" style="width: 66%;"></div>
-                            </div>
-                            <div class="stats-desc" id="streak-desc-text">2/3 days</div>
-                        </div>
-
-                        <!-- Completion card -->
-                        <div class="stats-card">
-                            <div class="stats-icon-wrapper">
-                                <div class="star-sphere"></div>
-                            </div>
-                            <div class="stats-number" id="stats-completed-count">10</div>
-                            <div class="stats-lbl">Completed</div>
-                            <div class="stats-bar-outer">
-                                <div class="stats-bar-inner" id="completed-bar-progress" style="width: 71%;"></div>
-                            </div>
-                            <div class="stats-desc" id="completed-desc-text">10/14 tasks</div>
-                        </div>
-
-                    </div>
-
-                </div>
-            </section>
-
-
-            <!-- 5. AI MASCOT CHAT VIEW (Image 4) -->
-            <section id="chat-view" class="view">
-                <div class="chat-container">
-                    
-                    <!-- Chat body area -->
-                    <div class="chat-bubble-area" id="chat-scroller">
-                        
-                        <!-- Default starting mascot prompt -->
-                        <div class="chat-mascot-wrapper" id="chat-welcome-box">
-                            <div class="mascot-ball large">
-                                <div class="mascot-eyes">
-                                    <div class="mascot-eye"><div class="mascot-pupil"></div></div>
-                                    <div class="mascot-eye"><div class="mascot-pupil"></div></div>
-                                </div>
-                                <div class="mascot-mouth"></div>
-                                <div class="mascot-hands">
-                                    <div class="mascot-hand left"></div>
-                                    <div class="mascot-hand right"></div>
-                                </div>
-                            </div>
-                            <div class="chat-instruction">
-                                Drop your thoughts.<br>I'll turn them into a plan.
-                            </div>
-                        </div>
-
-                        <!-- Conversational Bubble log -->
-                        <div class="chat-bubbles-history" id="chat-history-log">
-                            <!-- Dynamically loaded bubbles -->
-                        </div>
-
-                    </div>
-
-                    <!-- Chat bottom entry panel -->
-                    <div class="chat-input-row">
-                        <input type="text" id="chat-input-field" placeholder="What's todays plans?">
-                        <button class="speak-btn" id="voice-speak-btn">🎙️ Speak</button>
-                        <button class="send-chat-btn" id="chat-send-trigger" title="Send message">➔</button>
-                    </div>
-
-                </div>
-            </section>
-
-        </main>
-
-        <!-- Floating Glass bottom navigation bar (Image 1-5 bottom) -->
+        <!-- Left Navigation Sidebar (Desktop Sidebar, Mobile Bottom Bar) -->
         <nav class="bottom-nav">
-            <!-- Priority To-Do view tab -->
-            <button class="nav-item" data-target="todo-view" title="To-do Priorities">
+            <!-- Sidebar Brand Logo (Desktop only) -->
+            <div class="sidebar-brand">
+                <div class="brand-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <span class="brand-name">Taskly</span>
+            </div>
+
+            <button class="nav-item active" data-target="daily-view" title="Daily Plan">
                 <div class="nav-icon">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </div>
+                <span class="nav-text">Daily Plan</span>
+            </button>
+
+            <button class="nav-item" data-target="todo-view" title="To-do">
+                <div class="nav-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="9 11 12 14 22 4"></polyline>
                         <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                     </svg>
                 </div>
+                <span class="nav-text">To-do</span>
             </button>
-            
-            <!-- Calendar Daily view tab -->
-            <button class="nav-item active" data-target="daily-view" title="Daily Planner">
+
+            <button class="nav-item" data-target="focus-view" title="Focus">
                 <div class="nav-icon">
-                    <div class="nav-icon-cal">20</div>
-                </div>
-            </button>
-            
-            <!-- Focus Timer view tab -->
-            <button class="nav-item" data-target="focus-view" title="Focus Timer">
-                <div class="nav-icon">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                     </svg>
                 </div>
+                <span class="nav-text">Focus</span>
             </button>
-            
-            <!-- Statistics view tab -->
-            <button class="nav-item" data-target="stats-view" title="Activity & Analytics">
+
+            <button class="nav-item" data-target="stats-view" title="Stats">
                 <div class="nav-icon">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="20" x2="18" y2="10"></line>
                         <line x1="12" y1="20" x2="12" y2="4"></line>
                         <line x1="6" y1="20" x2="6" y2="14"></line>
                     </svg>
                 </div>
+                <span class="nav-text">Stats</span>
             </button>
 
-            <!-- Mascot AI Planner Assistant bubble -->
-            <button class="nav-item" data-target="chat-view" title="AI Thought Catcher">
-                <div class="nav-mascot-head">
-                    <div class="nav-mascot-eyes">
-                        <div class="nav-mascot-eye"><div class="nav-mascot-pupil"></div></div>
-                        <div class="nav-mascot-eye"><div class="nav-mascot-pupil"></div></div>
-                    </div>
+            <button class="nav-item" data-target="chat-view" title="AI Planner">
+                <div class="nav-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
                 </div>
+                <span class="nav-text">AI Planner</span>
             </button>
         </nav>
 
+        <!-- Right Side Container (App Header + Main Content Viewport) -->
+        <div class="app-workspace">
+            
+            <!-- App Header -->
+            <header>
+                <div class="header-left">
+                    <div class="stats-bubbles">
+                        <!-- Day Streak -->
+                        <div class="stat-bubble" title="Current Day Streak">
+                            <span style="font-size: 14px;">🔥</span>
+                            <span id="header-streak-count">2</span>
+                        </div>
+                        <!-- Completed count -->
+                        <div class="stat-bubble" title="Tasks Completed Today">
+                            <span style="font-size: 14px;">🌟</span>
+                            <span id="header-completed-count">10</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <!-- User Avatar picture from Google -->
+                    <div id="user-avatar-bubble" class="circle-btn" style="background-size: cover; background-position: center; display: none;" title="User Profile"></div>
+                    <!-- Action menu dots -->
+                    <button class="circle-btn" id="action-menu-btn" title="More Options">•••</button>
+                    <!-- Quick add plus -->
+                    <button class="circle-btn" id="header-add-btn" title="Add Task">+</button>
+                </div>
+            </header>
+
+            <!-- Main Scrollable Content Viewport -->
+            <main>
+                
+                <!-- 1. DAILY PLANNER VIEW (Image 1) -->
+                <section id="daily-view" class="view active">
+                    <!-- Date title row matching image -->
+                    <div class="date-header-row">
+                        <h1 id="daily-day-title">Wednesday</h1>
+                        <span class="date-month-indicator">JUN 2026 &gt;</span>
+                    </div>
+                    
+                    <!-- Weekly Calendar strip -->
+                    <div class="calendar-slider">
+                        <div class="cal-day" data-day="31">
+                            <span class="day-lbl">S</span>
+                            <span class="day-num">31</span>
+                        </div>
+                        <div class="cal-day" data-day="1">
+                            <span class="day-lbl">M</span>
+                            <span class="day-num">1</span>
+                        </div>
+                        <div class="cal-day" data-day="2">
+                            <span class="day-lbl">T</span>
+                            <span class="day-num">2</span>
+                        </div>
+                        <div class="cal-day active" data-day="3">
+                            <span class="day-lbl">W</span>
+                            <span class="day-num">3</span>
+                        </div>
+                        <div class="cal-day" data-day="4">
+                            <span class="day-lbl">T</span>
+                            <span class="day-num">4</span>
+                        </div>
+                        <div class="cal-day" data-day="5">
+                            <span class="day-lbl">F</span>
+                            <span class="day-num">5</span>
+                        </div>
+                        <div class="cal-day" data-day="6">
+                            <span class="day-lbl">S</span>
+                            <span class="day-num">6</span>
+                        </div>
+                    </div>
+
+                    <!-- Onboarding helper banner (No Mascot, pure text style) -->
+                    <div class="onboarding-banner" id="onboarding-banner">
+                        <button class="banner-close" id="close-banner-btn">&times;</button>
+                        <div class="banner-content">
+                            <div class="banner-title">Plan your day</div>
+                            <div class="banner-desc">Tell us a few things you'd like to get done today</div>
+                        </div>
+                    </div>
+
+                    <!-- Time block sections -->
+                    <div class="block-sections">
+                        
+                        <!-- ANYTIME BLOCK -->
+                        <div class="block-card" id="card-anytime">
+                            <div class="block-header">
+                                <div class="block-title-group">
+                                    <span class="block-badge badge-anytime">🕒 ANYTIME (<span class="count">0</span>)</span>
+                                </div>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="block-content">
+                                <div class="task-list" id="list-anytime">
+                                    <!-- Dynamic tasks -->
+                                </div>
+                                <div class="quick-input-row">
+                                    <input type="text" placeholder="Anytime today works" class="block-task-input" data-block="anytime">
+                                    <button class="quick-add-btn">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- MORNING BLOCK -->
+                        <div class="block-card" id="card-morning">
+                            <div class="block-header">
+                                <div class="block-title-group">
+                                    <span class="block-badge badge-morning">🌅 MORNING (<span class="count">0</span>)</span>
+                                </div>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="block-content">
+                                <div class="task-list" id="list-morning">
+                                    <!-- Dynamic tasks -->
+                                </div>
+                                <div class="quick-input-row">
+                                    <input type="text" placeholder="What's on your morning list?" class="block-task-input" data-block="morning">
+                                    <button class="quick-add-btn">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AFTERNOON BLOCK -->
+                        <div class="block-card" id="card-afternoon">
+                            <div class="block-header">
+                                <div class="block-title-group">
+                                    <span class="block-badge badge-afternoon">☀️ AFTERNOON (<span class="count">0</span>)</span>
+                                </div>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="block-content">
+                                <div class="task-list" id="list-afternoon">
+                                    <!-- Dynamic tasks -->
+                                </div>
+                                <div class="quick-input-row">
+                                    <input type="text" placeholder="What's happening today?" class="block-task-input" data-block="afternoon">
+                                    <button class="quick-add-btn">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- EVENING BLOCK -->
+                        <div class="block-card" id="card-evening">
+                            <div class="block-header">
+                                <div class="block-title-group">
+                                    <span class="block-badge badge-evening">🌙 EVENING (<span class="count">0</span>)</span>
+                                </div>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="block-content">
+                                <div class="task-list" id="list-evening">
+                                    <!-- Dynamic tasks -->
+                                </div>
+                                <div class="quick-input-row">
+                                    <input type="text" placeholder="End the day your way" class="block-task-input" data-block="evening">
+                                    <button class="quick-add-btn">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <!-- 2. PRIORITY TO-DO VIEW (Image 2) -->
+                <section id="todo-view" class="view">
+                    <h1>To-do <span class="todo-title-plus">+</span></h1>
+
+                    <div class="block-sections">
+                        
+                        <!-- HIGH PRIORITY -->
+                        <div class="block-card" id="card-high">
+                            <div class="block-header">
+                                <div class="block-title-group">
+                                    <span class="block-badge badge-high">▲ HIGH (<span class="count">0</span>)</span>
+                                </div>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="block-content">
+                                <div class="task-list" id="list-high">
+                                    <!-- Dynamic tasks -->
+                                </div>
+                                <div class="quick-input-row">
+                                    <input type="text" placeholder="Add it to your list" class="priority-task-input" data-priority="high">
+                                    <button class="quick-add-btn">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- MEDIUM PRIORITY -->
+                        <div class="block-card" id="card-medium">
+                            <div class="block-header">
+                                <div class="block-title-group">
+                                    <span class="block-badge badge-medium">● MEDIUM (<span class="count">0</span>)</span>
+                                </div>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="block-content">
+                                <div class="task-list" id="list-medium">
+                                    <!-- Dynamic tasks -->
+                                </div>
+                                <div class="quick-input-row">
+                                    <input type="text" placeholder="Add it to your list" class="priority-task-input" data-priority="medium">
+                                    <button class="quick-add-btn">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- LOW PRIORITY -->
+                        <div class="block-card" id="card-low">
+                            <div class="block-header">
+                                <div class="block-title-group">
+                                    <span class="block-badge badge-low">▼ LOW (<span class="count">0</span>)</span>
+                                </div>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="block-content">
+                                <div class="task-list" id="list-low">
+                                    <!-- Dynamic tasks -->
+                                </div>
+                                <div class="quick-input-row">
+                                    <input type="text" placeholder="Add it to your list" class="priority-task-input" data-priority="low">
+                                    <button class="quick-add-btn">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TO-DO (GENERAL) -->
+                        <div class="block-card" id="card-general">
+                            <div class="block-header">
+                                <div class="block-title-group">
+                                    <span class="block-badge badge-todo">■ TO-DO (<span class="count">0</span>)</span>
+                                </div>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="block-content">
+                                <div class="task-list" id="list-general">
+                                    <!-- Dynamic tasks -->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Global Add Task Input at bottom (Image 2) -->
+                    <div class="global-input-container">
+                        <span style="font-size: 16px; color: var(--text-light);">✍️</span>
+                        <input type="text" id="global-todo-input" placeholder="Add it to your list">
+                        <button class="quick-add-btn" id="global-todo-add-btn">+</button>
+                    </div>
+                </section>
+
+
+                <!-- 3. FOCUS TIMER VIEW (Image 5) -->
+                <section id="focus-view" class="view">
+                    <h1>Focus</h1>
+
+                    <div class="timer-container">
+                        <!-- Top control pills -->
+                        <div class="timer-header-btns">
+                            <button class="pill-btn" id="tune-in-btn">
+                                <span>🎵</span> Tune in
+                            </button>
+                        </div>
+
+                        <!-- Double Ring Timer -->
+                        <div class="circular-timer-wrapper">
+                            <!-- Inner / Outer ring styling -->
+                            <div class="timer-inner-ring"></div>
+                            <svg class="timer-svg" width="220" height="220" viewBox="0 0 220 220">
+                                <circle class="timer-bg-circle" cx="110" cy="110" r="100"></circle>
+                                <circle id="timer-progress-bar" class="timer-progress-circle" cx="110" cy="110" r="100"></circle>
+                            </svg>
+                            
+                            <!-- Inside minutes indicator -->
+                            <div class="timer-text-overlay">
+                                <span class="timer-min-display" id="timer-minutes-text">15</span>
+                                <span class="timer-lbl-display">MINS</span>
+                            </div>
+                        </div>
+
+                        <!-- Timer Status / Label -->
+                        <div class="timer-status-text">--</div>
+
+                        <!-- Presets selector buttons row below circle -->
+                        <div class="timer-presets-row">
+                            <button class="preset-pill" data-mins="5">5m</button>
+                            <button class="preset-pill" data-mins="10">10m</button>
+                            <button class="preset-pill active" data-mins="15">15m</button>
+                            <button class="preset-pill" data-mins="25">25m</button>
+                            <button class="preset-pill" data-mins="30">30m</button>
+                            <button class="preset-pill" data-mins="45">45m</button>
+                            <button class="preset-pill" data-mins="60">60m</button>
+                        </div>
+
+                        <!-- Play/Pause Controls -->
+                        <div class="timer-controls">
+                            <button class="play-pause-btn black-btn" id="timer-play-btn">
+                                <span id="play-btn-icon" style="margin-right: 8px;">▶</span> <span id="play-btn-text">Start</span>
+                            </button>
+                        </div>
+
+                        <!-- Audio soundscape drawer (Tune in) -->
+                        <div class="sound-panel" id="sound-drawer" style="display: none;">
+                            <div class="sound-panel-title">Ambient Soundscapes</div>
+                            <div class="sound-tracks">
+                                <div class="track-row" data-track="lofi">
+                                    <div class="track-info">
+                                        <span>🎹</span>
+                                        <span>Lofi Study Session</span>
+                                    </div>
+                                    <button class="track-play-btn">▶</button>
+                                </div>
+                                <div class="track-row" data-track="rain">
+                                    <div class="track-info">
+                                        <span>🌧️</span>
+                                        <span>Soft Evening Rain</span>
+                                    </div>
+                                    <button class="track-play-btn">▶</button>
+                                </div>
+                                <div class="track-row" data-track="forest">
+                                    <div class="track-info">
+                                        <span>🌲</span>
+                                        <span>Nature Whispers</span>
+                                    </div>
+                                    <button class="track-play-btn">▶</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- 4. STATS & PROFILE VIEW (Image 3) -->
+                <section id="stats-view" class="view">
+                    <div class="profile-section">
+                        <!-- Profile title -->
+                        <div class="stats-header-row">
+                            <h1>Your Progress</h1>
+                            <div class="theme-selector-container-header">
+                                <div class="theme-spheres">
+                                    <div class="theme-sphere-group active" data-theme-name="mist" title="Mist Theme">
+                                        <div class="theme-sphere sphere-mist"></div>
+                                    </div>
+                                    <div class="theme-sphere-group" data-theme-name="sunset" title="Sunset Theme">
+                                        <div class="theme-sphere sphere-sunset"></div>
+                                    </div>
+                                    <div class="theme-sphere-group" data-theme-name="aurora" title="Aurora Theme">
+                                        <div class="theme-sphere sphere-aurora"></div>
+                                    </div>
+                                    <div class="theme-sphere-group" data-theme-name="cosmic" title="Cosmic Theme">
+                                        <div class="theme-sphere sphere-cosmic"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Cards Grid -->
+                        <div class="progress-grid">
+                            
+                            <!-- Streak card -->
+                            <div class="stats-card">
+                                <div class="stats-card-icon-wrapper purple-text">
+                                    <!-- Outline Flame SVG -->
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+                                    </svg>
+                                </div>
+                                <div class="stats-number" id="stats-streak-count">0</div>
+                                <div class="stats-lbl">DAY STREAK</div>
+                                <div class="stats-bar-outer">
+                                    <div class="stats-bar-inner" id="streak-bar-progress" style="width: 0%;"></div>
+                                </div>
+                                <div class="stats-desc" id="streak-desc-text">0/7 days</div>
+                            </div>
+
+                            <!-- Completion card -->
+                            <div class="stats-card">
+                                <div class="stats-card-icon-wrapper green-text">
+                                    <!-- Outline Check circle SVG -->
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="stats-number" id="stats-completed-count">6</div>
+                                <div class="stats-lbl">COMPLETED</div>
+                                <div class="stats-bar-outer">
+                                    <div class="stats-bar-inner green-bg" id="completed-bar-progress" style="width: 100%;"></div>
+                                </div>
+                                <div class="stats-desc" id="completed-desc-text">6/6 tasks</div>
+                            </div>
+
+                        </div>
+
+                        <!-- Completion Rate Card -->
+                        <div class="wide-progress-card">
+                            <div class="wide-card-header">
+                                <span class="rate-label">Completion Rate</span>
+                                <span class="rate-value" id="completion-pct-value">100%</span>
+                            </div>
+                            <div class="wide-bar-outer">
+                                <div class="wide-bar-inner" id="completion-rate-fill" style="width: 100%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Total Completed Message Card -->
+                        <div class="message-stats-card">
+                            <div class="msg-sub">Keep going!</div>
+                            <div class="msg-main" id="total-completed-message-text">You've completed 6 tasks so far</div>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <!-- 5. AI PLANNER VIEW (Image 4) -->
+                <section id="chat-view" class="view">
+                    <div class="chat-container">
+                        
+                        <!-- Chat default welcome banner -->
+                        <div class="chat-welcome-wrapper" id="chat-welcome-box">
+                            <div class="sparkles-circle-logo">
+                                <!-- Double Sparkles SVG -->
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"></path>
+                                </svg>
+                            </div>
+                            <div class="chat-instruction">
+                                Drop your thoughts.
+                            </div>
+                            <div class="chat-sub-instruction">
+                                I'll turn them into a plan.
+                            </div>
+                        </div>
+
+                        <!-- Conversational log bubble wrapper -->
+                        <div class="chat-bubbles-history" id="chat-history-log">
+                            <!-- Dynamic messages -->
+                        </div>
+
+                        <!-- Chat Bottom Entry Bar -->
+                        <div class="chat-bar-row">
+                            <input type="text" id="chat-input-field" placeholder="What's today's plans?">
+                            <button class="send-chat-circle-btn" id="chat-send-trigger" title="Send plans">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+
+                    </div>
+                </section>
+
+            </main>
+        </div>
+
     </div>
 
-    <!-- Web Audio synthesizer context for generating authentic offline lofi sounds -->
     <script src="app.js"></script>
 </body>
 </html>

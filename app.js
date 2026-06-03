@@ -335,6 +335,15 @@ function updateStatsPage() {
     document.getElementById("streak-desc-text").textContent = `${state.streak}/${state.streakGoal} days`;
     const streakPct = (state.streak / state.streakGoal) * 100;
     document.getElementById("streak-bar-progress").style.width = `${Math.min(streakPct, 100)}%`;
+
+    // Completion Rate Card updates
+    const pctText = document.getElementById("completion-pct-value");
+    const pctFill = document.getElementById("completion-rate-fill");
+    const msgText = document.getElementById("total-completed-message-text");
+
+    if (pctText) pctText.textContent = `${Math.round(completedPct)}%`;
+    if (pctFill) pctFill.style.width = `${completedPct}%`;
+    if (msgText) msgText.textContent = `You've completed ${completed} tasks so far`;
 }
 
 // Web Audio Ambient Synthesizer
@@ -484,14 +493,20 @@ function initFocusTimer() {
     const playText = document.getElementById("play-btn-text");
     const minutesText = document.getElementById("timer-minutes-text");
     const progressBar = document.getElementById("timer-progress-bar");
+    const statusText = document.querySelector(".timer-status-text");
 
-    // Click presets around timer
-    document.querySelectorAll(".preset-tick").forEach(tick => {
-        tick.addEventListener("click", () => {
+    // Click presets pills below timer
+    document.querySelectorAll(".preset-pill").forEach(pill => {
+        pill.addEventListener("click", () => {
             if(state.timer.isRunning) return;
-            const mins = parseInt(tick.getAttribute("data-mins"));
+            
+            document.querySelectorAll(".preset-pill").forEach(p => p.classList.remove("active"));
+            pill.classList.add("active");
+            
+            const mins = parseInt(pill.getAttribute("data-mins"));
             state.timer.totalSeconds = mins * 60;
             state.timer.remainingSeconds = mins * 60;
+            if(statusText) statusText.textContent = "--";
             updateTimerDisplay();
         });
     });
@@ -505,12 +520,14 @@ function initFocusTimer() {
             playBtn.classList.remove("running");
             playIcon.textContent = "▶";
             playText.textContent = "Start";
+            if(statusText) statusText.textContent = "Paused";
         } else {
             // Resume/Start
             state.timer.isRunning = true;
             playBtn.classList.add("running");
             playIcon.textContent = "⏸";
             playText.textContent = "Pause";
+            if(statusText) statusText.textContent = "Focus Session Active";
 
             state.timer.intervalId = setInterval(() => {
                 state.timer.remainingSeconds--;
@@ -526,6 +543,7 @@ function initFocusTimer() {
                     state.streak += 1;
                     updateHeaderStats();
                     updateStatsPage();
+                    if(statusText) statusText.textContent = "Session Complete!";
                     alert("Focus session complete! Streak increased! 🚀");
                     state.timer.remainingSeconds = state.timer.totalSeconds;
                     updateTimerDisplay();
