@@ -680,57 +680,135 @@ function initAIChat() {
     }
 }
 
-// Google Login Mock OAuth handler
+// Google Login real OAuth handler
 function initGoogleLogin() {
     const loginScreen = document.getElementById("login-screen");
-    const loginBtn = document.getElementById("google-login-btn");
-    
+    const configToggle = document.getElementById("config-toggle-btn");
+    const configContent = document.getElementById("config-content");
+    const clientIdInput = document.getElementById("custom-client-id-input");
+    const saveClientIdBtn = document.getElementById("save-client-id-btn");
+
+    // Drawer toggle
+    configToggle.addEventListener("click", () => {
+        configContent.style.display = configContent.style.display === "none" ? "block" : "none";
+    });
+
     // Check localStorage for prior login state
     const savedUser = localStorage.getItem("luma_logged_in");
+    const savedPic = localStorage.getItem("luma_profile_pic");
+    
     if (savedUser) {
         loginScreen.classList.add("hidden");
-        updateProfileName(savedUser);
+        updateProfileName(savedUser, savedPic);
     }
-    
-    loginBtn.addEventListener("click", () => {
-        loginBtn.disabled = true;
-        loginBtn.style.opacity = "0.8";
-        loginBtn.innerHTML = `
-            <svg style="animation: spin 1s linear infinite; margin-right: 8px;" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3">
-                <circle cx="12" cy="12" r="10" stroke="rgba(0,0,0,0.1)"></circle>
-                <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
-            </svg>
-            <span>Connecting Google Account...</span>
-        `;
-        
-        // Inject keyframes dynamically if not present
-        if (!document.getElementById("spin-keyframes")) {
-            const style = document.createElement("style");
-            style.id = "spin-keyframes";
-            style.innerHTML = "@keyframes spin { to { transform: rotate(360deg); } }";
-            document.head.appendChild(style);
+
+    // Default development client ID (replaceable by user in UI)
+    let clientId = localStorage.getItem("luma_client_id") || "72491820587-testdummyclient.apps.googleusercontent.com";
+    clientIdInput.value = clientId;
+
+    const setupGoogleGSI = () => {
+        if (typeof google === 'undefined' || !google.accounts) {
+            // Retry loading GSI client SDK after a small delay
+            setTimeout(setupGoogleGSI, 500);
+            return;
         }
         
-        setTimeout(() => {
-            const mockName = "Nihal Kumar";
-            localStorage.setItem("luma_logged_in", mockName);
-            
-            // Slide out login overlay
-            loginScreen.classList.add("hidden");
-            updateProfileName(mockName);
-        }, 1500);
+        try {
+            google.accounts.id.initialize({
+                client_id: clientId,
+                callback: handleCredentialResponse,
+                auto_select: false,
+                cancel_on_tap_outside: true
+            });
+
+            // Render Google official button in container
+            google.accounts.id.renderButton(
+                document.getElementById("google-signin-button-container"),
+                {
+                    theme: "outline",
+                    size: "large",
+                    shape: "pill",
+                    width: 280,
+                    text: "signin_with",
+                    logo_alignment: "left"
+                }
+            );
+
+            // Trigger Google One Tap overlay
+            google.accounts.id.prompt();
+        } catch (e) {
+            console.error("Google GSI Initialization Error:", e);
+        }
+    };
+
+    // Initialize GIS button
+    setupGoogleGSI();
+
+    // Re-initialize button if custom client ID saved
+    saveClientIdBtn.addEventListener("click", () => {
+        const customId = clientIdInput.value.trim();
+        if (customId) {
+            localStorage.setItem("luma_client_id", customId);
+            clientId = customId;
+            setupGoogleGSI();
+            alert("Google Client ID configured! Re-rendering sign-in button...");
+        }
     });
+
+    // Parse the JWT token payload
+    function handleCredentialResponse(response) {
+        try {
+            const credentialToken = response.credential;
+            const profile = decodeJwt(credentialToken);
+            
+            if (profile && profile.name) {
+                localStorage.setItem("luma_logged_in", profile.name);
+                if (profile.picture) localStorage.setItem("luma_profile_pic", profile.picture);
+                if (profile.email) localStorage.setItem("luma_email", profile.email);
+                
+                // Hide login screen
+                loginScreen.classList.add("hidden");
+                updateProfileName(profile.name, profile.picture);
+            }
+        } catch (error) {
+            console.error("Failed to login with Google:", error);
+            alert("Authentication failed. Please verify your Client ID config.");
+        }
+    }
+
+    // Helper to decode JWT without external dependencies
+    function decodeJwt(token) {
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        } catch (e) {
+            console.error("JWT Decode error:", e);
+            return null;
+        }
+    }
 }
 
-function updateProfileName(name) {
+function updateProfileName(name, avatarUrl) {
     const profileHeader = document.querySelector("#stats-view h1");
     if (profileHeader) {
         profileHeader.textContent = name;
     }
-    // Also personalize header welcome if appropriate
+    
+    // Header date personalization
     const welcomeTitle = document.getElementById("daily-day-title");
     if (welcomeTitle) {
         const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
         welcomeTitle.textContent = `${today}`;
+    }
+
+    // Update Avatar image bubble in header if available
+    const avatarBubble = document.getElementById("user-avatar-bubble");
+    if (avatarBubble && avatarUrl) {
+        avatarBubble.style.backgroundImage = `url('${avatarUrl}')`;
+        avatarBubble.style.display = "block";
     }
 }

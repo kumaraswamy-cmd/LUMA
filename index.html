@@ -11,6 +11,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#FAF9F6">
     <link rel="stylesheet" href="style.css">
+    <!-- Google Identity Services (GIS) Web SDK client -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -34,15 +36,21 @@
             <h2 class="login-title">Plan your day, clear your mind.</h2>
             <p class="login-subtitle">Sync your tasks and focus sessions with Google Account.</p>
             
-            <button class="google-login-btn" id="google-login-btn">
-                <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20">
-                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.69a5.74 5.74 0 0 1-2.49 3.77v3.13h4.01c2.34-2.16 3.69-5.32 3.69-8.75z"/>
-                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-4.01-3.13c-1.12.75-2.55 1.19-3.92 1.19-3.02 0-5.58-2.04-6.5-4.77H1.31v3.23A12.001 12.001 0 0 0 12 24z"/>
-                    <path fill="#FBBC05" d="M5.5 14.38a7.16 7.16 0 0 1 0-4.77V6.38H1.31a12.008 12.008 0 0 0 0 11.23l4.19-3.23z"/>
-                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.28 2.68 1.31 6.38l4.19 3.23c.92-2.73 3.48-4.77 6.5-4.77z"/>
-                </svg>
-                <span>Sign in with Google</span>
-            </button>
+            <!-- Real Google Login Button Wrapper -->
+            <div id="google-signin-button-container"></div>
+
+            <!-- Client ID Configurator Drawer -->
+            <div class="client-id-config-drawer" id="client-id-drawer">
+                <button class="config-toggle-btn" id="config-toggle-btn">🔧 Configure Google Client ID</button>
+                <div class="config-content" id="config-content" style="display: none;">
+                    <p class="config-instructions">Enter your Google OAuth Client ID to test the real Google Login locally. Make sure <code>http://localhost:8080</code> is in your Authorized JavaScript Origins.</p>
+                    <div style="display: flex; gap: 8px; width: 100%;">
+                        <input type="text" id="custom-client-id-input" placeholder="Paste Client ID here (xxxx.apps.googleusercontent.com)">
+                        <button class="save-client-id-btn" id="save-client-id-btn">Apply</button>
+                    </div>
+                </div>
+            </div>
+            
             <div class="login-footer">By continuing, you agree to Luma's terms and privacy policy.</div>
         </div>
     </div>
@@ -67,6 +75,8 @@
             </div>
             
             <div class="header-right">
+                <!-- User Avatar picture from Google -->
+                <div id="user-avatar-bubble" class="circle-btn" style="background-size: cover; background-position: center; display: none;" title="User Profile"></div>
                 <!-- Action menu dots -->
                 <button class="circle-btn" id="action-menu-btn" title="More Options">•••</button>
                 <!-- Quick add plus -->
