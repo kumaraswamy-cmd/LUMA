@@ -37,11 +37,10 @@ const TIMER_CIRCUMFERENCE = 628; // 2 * PI * 100
 document.addEventListener("DOMContentLoaded", () => {
     initNavigation();
     initThemeSelector();
-    initMascotTracking();
     initTasks();
     initFocusTimer();
     initAIChat();
-    initGoogleLogin();
+    initProfileEditor();
     
     // Initial renders
     renderTasks();
@@ -308,34 +307,7 @@ function renderTasks() {
     });
 }
 
-// Character eye tracking mouse interaction
-function initMascotTracking() {
-    document.addEventListener("mousemove", (event) => {
-        const eyes = document.querySelectorAll(".mascot-pupil");
-        const mascotBall = document.querySelector(".mascot-ball");
-        
-        if (mascotBall && mascotBall.classList.contains("hiding-eyes")) {
-            eyes.forEach(pupil => {
-                pupil.style.transform = "translate(0px, 0px)";
-            });
-            return;
-        }
 
-        eyes.forEach(pupil => {
-            const eyeRect = pupil.parentElement.getBoundingClientRect();
-            const eyeCenterX = eyeRect.left + eyeRect.width / 2;
-            const eyeCenterY = eyeRect.top + eyeRect.height / 2;
-
-            const angle = Math.atan2(event.clientY - eyeCenterY, event.clientX - eyeCenterX);
-            const distance = Math.min(3, Math.hypot(event.clientX - eyeCenterX, event.clientY - eyeCenterY) / 30);
-            
-            const transX = Math.cos(angle) * distance;
-            const transY = Math.sin(angle) * distance;
-            
-            pupil.style.transform = `translate(${transX}px, ${transY}px)`;
-        });
-    });
-}
 
 // Stats & Themes configuration page
 function initThemeSelector() {
@@ -763,181 +735,26 @@ function initAIChat() {
     }
 }
 
-// Google Login real OAuth handler
-function initGoogleLogin() {
-    const loginScreen = document.getElementById("login-screen");
-    const configToggle = document.getElementById("config-toggle-btn");
-    const configContent = document.getElementById("config-content");
-    const clientIdInput = document.getElementById("custom-client-id-input");
-    const saveClientIdBtn = document.getElementById("save-client-id-btn");
+// Custom profile local-storage editor
+function initProfileEditor() {
+    const savedName = localStorage.getItem("taskly_profile_name") || "Kumar";
+    updateProfileName(savedName);
 
-    // Drawer toggle
-    configToggle.addEventListener("click", () => {
-        configContent.style.display = configContent.style.display === "none" ? "block" : "none";
-    });
-
-    // Check localStorage for prior login state
-    const savedUser = localStorage.getItem("luma_logged_in");
-    const savedPic = localStorage.getItem("luma_profile_pic");
-    const savedEmail = localStorage.getItem("luma_email");
-    
-    if (savedUser) {
-        loginScreen.classList.add("hidden");
-        updateProfileName(savedUser, savedPic, savedEmail);
-    }
-
-    // Default development client ID (replaceable by user in UI)
-    let clientId = localStorage.getItem("luma_client_id") || "72491820587-testdummyclient.apps.googleusercontent.com";
-    clientIdInput.value = clientId;
-
-    const setupGoogleGSI = () => {
-        if (typeof google === 'undefined' || !google.accounts) {
-            // Retry loading GSI client SDK after a small delay
-            setTimeout(setupGoogleGSI, 500);
-            return;
-        }
-        
-        try {
-            google.accounts.id.initialize({
-                client_id: clientId,
-                callback: handleCredentialResponse,
-                auto_select: false,
-                cancel_on_tap_outside: true
-            });
-
-            // Render Google official button in container
-            google.accounts.id.renderButton(
-                document.getElementById("google-signin-button-container"),
-                {
-                    theme: "outline",
-                    size: "large",
-                    shape: "pill",
-                    width: 280,
-                    text: "signin_with",
-                    logo_alignment: "left"
-                }
-            );
-
-            // Trigger Google One Tap overlay
-            google.accounts.id.prompt();
-        } catch (e) {
-            console.error("Google GSI Initialization Error:", e);
-        }
-    };
-
-    // Initialize GIS button
-    setupGoogleGSI();
-
-    // Re-initialize button if custom client ID saved
-    saveClientIdBtn.addEventListener("click", () => {
-        const customId = clientIdInput.value.trim();
-        if (customId) {
-            localStorage.setItem("luma_client_id", customId);
-            clientId = customId;
-            setupGoogleGSI();
-            alert("Google Client ID configured! Re-rendering sign-in button...");
-        }
-    });
-
-    // Bind real sign-out button
-    const signoutBtn = document.getElementById("profile-signout-btn");
-    if (signoutBtn) {
-        signoutBtn.addEventListener("click", () => {
-            localStorage.removeItem("luma_logged_in");
-            localStorage.removeItem("luma_profile_pic");
-            localStorage.removeItem("luma_email");
-            
-            // Show login screen
-            loginScreen.classList.remove("hidden");
-            
-            // Reset UI credentials
-            updateProfileName("Guest User", "", "Not signed in");
-            
-            if (typeof google !== 'undefined' && google.accounts) {
-                google.accounts.id.disableAutoSelect();
+    const editBtn = document.getElementById("profile-edit-btn");
+    if (editBtn) {
+        editBtn.addEventListener("click", () => {
+            const currentName = localStorage.getItem("taskly_profile_name") || "Kumar";
+            const newName = prompt("Enter your name:", currentName);
+            if (newName && newName.trim()) {
+                const clean = newName.trim();
+                localStorage.setItem("taskly_profile_name", clean);
+                updateProfileName(clean);
             }
         });
-    }
-
-    // Bind fallback mock test login button
-    const mockLoginBtn = document.getElementById("mock-login-btn");
-    if (mockLoginBtn) {
-        mockLoginBtn.addEventListener("click", () => {
-            localStorage.setItem("luma_logged_in", "Developer Guest");
-            localStorage.setItem("luma_profile_pic", "");
-            localStorage.setItem("luma_email", "guest@example.com");
-            loginScreen.classList.add("hidden");
-            updateProfileName("Developer Guest", "", "guest@example.com");
-        });
-    }
-
-    // Password input focus handlers for mascot eye-hiding effect
-    const pwdInput = document.getElementById("login-password-input");
-    const mascotBall = document.querySelector(".mascot-ball");
-    if (pwdInput && mascotBall) {
-        pwdInput.addEventListener("focus", () => {
-            mascotBall.classList.add("hiding-eyes");
-        });
-        pwdInput.addEventListener("blur", () => {
-            mascotBall.classList.remove("hiding-eyes");
-        });
-    }
-
-    // Password test sign-in submit callback
-    const pwdSubmitBtn = document.getElementById("password-login-submit");
-    if (pwdSubmitBtn && pwdInput) {
-        pwdSubmitBtn.addEventListener("click", () => {
-            const val = pwdInput.value.trim();
-            if (!val) {
-                alert("Please enter a password to test!");
-                return;
-            }
-            localStorage.setItem("luma_logged_in", "Password Tester");
-            localStorage.setItem("luma_profile_pic", "");
-            localStorage.setItem("luma_email", "password@test.com");
-            loginScreen.classList.add("hidden");
-            updateProfileName("Password Tester", "", "password@test.com");
-        });
-    }
-
-    // Parse the JWT token payload
-    function handleCredentialResponse(response) {
-        try {
-            const credentialToken = response.credential;
-            const profile = decodeJwt(credentialToken);
-            
-            if (profile && profile.name) {
-                localStorage.setItem("luma_logged_in", profile.name);
-                if (profile.picture) localStorage.setItem("luma_profile_pic", profile.picture);
-                if (profile.email) localStorage.setItem("luma_email", profile.email);
-                
-                // Hide login screen
-                loginScreen.classList.add("hidden");
-                updateProfileName(profile.name, profile.picture, profile.email);
-            }
-        } catch (error) {
-            console.error("Failed to login with Google:", error);
-            alert("Authentication failed. Please verify your Client ID config.");
-        }
-    }
-
-    // Helper to decode JWT without external dependencies
-    function decodeJwt(token) {
-        try {
-            const base64Url = token.split('.')[1];
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-            return JSON.parse(jsonPayload);
-        } catch (e) {
-            console.error("JWT Decode error:", e);
-            return null;
-        }
     }
 }
 
-function updateProfileName(name, avatarUrl, email) {
+function updateProfileName(name) {
     const profileHeader = document.querySelector("#stats-view h1");
     if (profileHeader) {
         profileHeader.textContent = "Your Progress";
@@ -950,30 +767,32 @@ function updateProfileName(name, avatarUrl, email) {
         welcomeTitle.textContent = `${today}`;
     }
 
-    // Update Avatar image bubble in header if available
+    // Update Avatar image bubble in header as a text initial avatar
     const avatarBubble = document.getElementById("user-avatar-bubble");
     if (avatarBubble) {
-        if (avatarUrl) {
-            avatarBubble.style.backgroundImage = `url('${avatarUrl}')`;
-            avatarBubble.style.display = "block";
-        } else {
-            avatarBubble.style.backgroundImage = "none";
-            avatarBubble.style.display = "none";
-        }
+        avatarBubble.textContent = (name || "K").charAt(0).toUpperCase();
+        avatarBubble.style.backgroundImage = "none";
+        avatarBubble.style.display = "flex";
+        avatarBubble.style.alignItems = "center";
+        avatarBubble.style.justifyContent = "center";
+        avatarBubble.style.fontWeight = "700";
+        avatarBubble.style.fontSize = "14px";
     }
 
     // Update profile card elements
     const cardName = document.getElementById("profile-card-name");
-    const cardEmail = document.getElementById("profile-card-email");
     const cardAvatar = document.getElementById("profile-card-avatar");
 
-    if (cardName) cardName.textContent = name || "Guest User";
-    if (cardEmail) cardEmail.textContent = email || "Not signed in";
+    if (cardName) cardName.textContent = name || "Kumar";
     if (cardAvatar) {
-        if (avatarUrl) {
-            cardAvatar.style.backgroundImage = `url('${avatarUrl}')`;
-        } else {
-            cardAvatar.style.backgroundImage = "none";
-        }
+        cardAvatar.textContent = (name || "K").charAt(0).toUpperCase();
+        cardAvatar.style.backgroundImage = "none";
+        cardAvatar.style.display = "flex";
+        cardAvatar.style.alignItems = "center";
+        cardAvatar.style.justifyContent = "center";
+        cardAvatar.style.color = "#FFFFFF";
+        cardAvatar.style.fontSize = "20px";
+        cardAvatar.style.fontWeight = "700";
+        cardAvatar.style.backgroundColor = "var(--timer-progress)";
     }
 }

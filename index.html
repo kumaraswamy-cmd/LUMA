@@ -11,69 +11,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#FAF9F6">
     <link rel="stylesheet" href="style.css">
-    <!-- Google Identity Services (GIS) Web SDK client -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
-
-    <!-- Beautiful Google Login Screen Overlay -->
-    <div id="login-screen" class="login-screen">
-        <div class="login-card">
-            <div class="login-logo">Taskly</div>
-            <div class="login-mascot-container">
-                <div class="mascot-ball large">
-                    <div class="mascot-eyes">
-                        <div class="mascot-eye"><div class="mascot-pupil"></div></div>
-                        <div class="mascot-eye"><div class="mascot-pupil"></div></div>
-                    </div>
-                    <div class="mascot-mouth"></div>
-                    <div class="mascot-hands">
-                        <div class="mascot-hand left"></div>
-                        <div class="mascot-hand right"></div>
-                    </div>
-                </div>
-            </div>
-            <h2 class="login-title">Plan your day, clear your mind.</h2>
-            <p class="login-subtitle">Sync your tasks and focus sessions with Google Account.</p>
-            
-            <!-- Real Google Login Button Wrapper -->
-            <div id="google-signin-button-container"></div>
-
-            <!-- Fallback Mock Login for Quick Testing -->
-            <button class="google-login-btn mock-login-btn" id="mock-login-btn" style="margin-top: 8px; border-color: var(--timer-progress); background: rgba(139, 92, 246, 0.05); color: var(--timer-progress); width: 280px; padding: 12px; border-radius: 20px; font-weight: 700; border: 1.5px solid var(--border-glass); cursor: pointer; font-family: inherit; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                👤 Test Guest Sign-In (Mock)
-            </button>
-
-            <!-- Password form to show mascot eye hiding effect -->
-            <div class="password-login-section" style="width: 280px; margin-top: 12px;">
-                <div style="display: flex; align-items: center; justify-content: center; margin: 8px 0; width: 100%;">
-                    <hr style="flex: 1; border: 0; border-top: 1px solid var(--border-glass);">
-                    <span style="font-size: 10px; color: var(--text-light); padding: 0 10px; font-weight: 600;">OR PASSWORD TEST</span>
-                    <hr style="flex: 1; border: 0; border-top: 1px solid var(--border-glass);">
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
-                    <input type="password" id="login-password-input" placeholder="Password (hides mascot eyes!)" style="width: 100%; border: 1px solid var(--border-glass); background: var(--bg-glass); border-radius: 20px; padding: 12px 16px; font-size: 12px; color: var(--text-main); outline: none; font-family: inherit; text-align: center;">
-                    <button id="password-login-submit" style="width: 100%; border: none; background: #1C1B1F; color: #FFFFFF; border-radius: 20px; padding: 12px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;">
-                        Sign In with Password
-                    </button>
-                </div>
-            </div>
-
-            <!-- Client ID Configurator Drawer -->
-            <div class="client-id-config-drawer" id="client-id-drawer">
-                <button class="config-toggle-btn" id="config-toggle-btn">🔧 Configure Google Client ID</button>
-                <div class="config-content" id="config-content" style="display: none;">
-                    <p class="config-instructions">Enter your Google OAuth Client ID to test the real Google Login locally. Make sure <code>http://localhost:8080</code> is in your Authorized JavaScript Origins.</p>
-                    <div style="display: flex; gap: 8px; width: 100%;">
-                        <input type="text" id="custom-client-id-input" placeholder="Paste Client ID here (xxxx.apps.googleusercontent.com)">
-                        <button class="save-client-id-btn" id="save-client-id-btn">Apply</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="login-footer">By continuing, you agree to Taskly's terms and privacy policy.</div>
-        </div>
-    </div>
 
     <div class="desktop-container">
         
@@ -502,14 +441,14 @@
                         <!-- Profile / Account Card -->
                         <div class="user-profile-card" id="user-profile-card">
                             <div class="profile-card-left">
-                                <div class="profile-card-avatar" id="profile-card-avatar"></div>
+                                <div class="profile-card-avatar" id="profile-card-avatar">K</div>
                                 <div class="profile-card-info">
-                                    <div class="profile-card-name" id="profile-card-name">Guest User</div>
-                                    <div class="profile-card-email" id="profile-card-email">Not signed in</div>
+                                    <div class="profile-card-name" id="profile-card-name">Kumar</div>
+                                    <div class="profile-card-email" id="profile-card-email">Local iCloud Sync</div>
                                 </div>
                             </div>
-                            <button class="sign-out-btn" id="profile-signout-btn" title="Sign Out">
-                                🔓 Sign Out
+                            <button class="sign-out-btn" id="profile-edit-btn" title="Customize Profile">
+                                Edit Profile
                             </button>
                         </div>
 
