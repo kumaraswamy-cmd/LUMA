@@ -1515,3 +1515,132 @@ h1 {
 .checkbox-round.checked {
     transform: scale(1.08);
 }
+
+/* ==========================================
+   MASCOT CHARACTER STYLE (TIMMO/TASKLY)
+   ========================================== */
+.login-mascot-container {
+    width: 140px;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.mascot-ball {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: var(--mascot-gradient);
+    position: relative;
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.35), inset -8px -8px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: floatMascot 4s ease-in-out infinite;
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes floatMascot {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.mascot-eyes {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 4px;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.mascot-eye {
+    width: 24px;
+    height: 24px;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.mascot-pupil {
+    width: 10px;
+    height: 10px;
+    background-color: #1C1B1F;
+    border-radius: 50%;
+    transition: transform 0.1s ease-out;
+}
+
+.mascot-mouth {
+    width: 16px;
+    height: 8px;
+    border-bottom: 3px solid #1C1B1F;
+    border-radius: 0 0 8px 8px;
+    margin-top: 2px;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.mascot-hands {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.mascot-hand {
+    width: 22px;
+    height: 22px;
+    background: #E879F9; /* Matching gradient pink */
+    border-radius: 50%;
+    position: absolute;
+    bottom: 25px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15), inset -2px -2px 5px rgba(0,0,0,0.1);
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mascot-hand.left {
+    left: 15px;
+    transform: rotate(15deg);
+}
+
+.mascot-hand.right {
+    right: 15px;
+    transform: rotate(-15deg);
+}
+
+/* Eye hiding animation when password field is focused */
+.mascot-ball.hiding-eyes .mascot-hand.left {
+    left: 32px;
+    bottom: 50px;
+    width: 26px;
+    height: 26px;
+    transform: scale(1.1);
+}
+
+.mascot-ball.hiding-eyes .mascot-hand.right {
+    right: 32px;
+    bottom: 50px;
+    width: 26px;
+    height: 26px;
+    transform: scale(1.1);
+}
+
+.mascot-ball.hiding-eyes .mascot-mouth {
+    width: 8px;
+    height: 8px;
+    border: 3px solid #1C1B1F;
+    border-radius: 50%;
+    border-top-color: transparent;
+}

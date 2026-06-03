@@ -312,6 +312,15 @@ function renderTasks() {
 function initMascotTracking() {
     document.addEventListener("mousemove", (event) => {
         const eyes = document.querySelectorAll(".mascot-pupil");
+        const mascotBall = document.querySelector(".mascot-ball");
+        
+        if (mascotBall && mascotBall.classList.contains("hiding-eyes")) {
+            eyes.forEach(pupil => {
+                pupil.style.transform = "translate(0px, 0px)";
+            });
+            return;
+        }
+
         eyes.forEach(pupil => {
             const eyeRect = pupil.parentElement.getBoundingClientRect();
             const eyeCenterX = eyeRect.left + eyeRect.width / 2;
@@ -841,6 +850,47 @@ function initGoogleLogin() {
             if (typeof google !== 'undefined' && google.accounts) {
                 google.accounts.id.disableAutoSelect();
             }
+        });
+    }
+
+    // Bind fallback mock test login button
+    const mockLoginBtn = document.getElementById("mock-login-btn");
+    if (mockLoginBtn) {
+        mockLoginBtn.addEventListener("click", () => {
+            localStorage.setItem("luma_logged_in", "Developer Guest");
+            localStorage.setItem("luma_profile_pic", "");
+            localStorage.setItem("luma_email", "guest@example.com");
+            loginScreen.classList.add("hidden");
+            updateProfileName("Developer Guest", "", "guest@example.com");
+        });
+    }
+
+    // Password input focus handlers for mascot eye-hiding effect
+    const pwdInput = document.getElementById("login-password-input");
+    const mascotBall = document.querySelector(".mascot-ball");
+    if (pwdInput && mascotBall) {
+        pwdInput.addEventListener("focus", () => {
+            mascotBall.classList.add("hiding-eyes");
+        });
+        pwdInput.addEventListener("blur", () => {
+            mascotBall.classList.remove("hiding-eyes");
+        });
+    }
+
+    // Password test sign-in submit callback
+    const pwdSubmitBtn = document.getElementById("password-login-submit");
+    if (pwdSubmitBtn && pwdInput) {
+        pwdSubmitBtn.addEventListener("click", () => {
+            const val = pwdInput.value.trim();
+            if (!val) {
+                alert("Please enter a password to test!");
+                return;
+            }
+            localStorage.setItem("luma_logged_in", "Password Tester");
+            localStorage.setItem("luma_profile_pic", "");
+            localStorage.setItem("luma_email", "password@test.com");
+            loginScreen.classList.add("hidden");
+            updateProfileName("Password Tester", "", "password@test.com");
         });
     }
 

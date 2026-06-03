@@ -39,6 +39,26 @@
             <!-- Real Google Login Button Wrapper -->
             <div id="google-signin-button-container"></div>
 
+            <!-- Fallback Mock Login for Quick Testing -->
+            <button class="google-login-btn mock-login-btn" id="mock-login-btn" style="margin-top: 8px; border-color: var(--timer-progress); background: rgba(139, 92, 246, 0.05); color: var(--timer-progress); width: 280px; padding: 12px; border-radius: 20px; font-weight: 700; border: 1.5px solid var(--border-glass); cursor: pointer; font-family: inherit; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                👤 Test Guest Sign-In (Mock)
+            </button>
+
+            <!-- Password form to show mascot eye hiding effect -->
+            <div class="password-login-section" style="width: 280px; margin-top: 12px;">
+                <div style="display: flex; align-items: center; justify-content: center; margin: 8px 0; width: 100%;">
+                    <hr style="flex: 1; border: 0; border-top: 1px solid var(--border-glass);">
+                    <span style="font-size: 10px; color: var(--text-light); padding: 0 10px; font-weight: 600;">OR PASSWORD TEST</span>
+                    <hr style="flex: 1; border: 0; border-top: 1px solid var(--border-glass);">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                    <input type="password" id="login-password-input" placeholder="Password (hides mascot eyes!)" style="width: 100%; border: 1px solid var(--border-glass); background: var(--bg-glass); border-radius: 20px; padding: 12px 16px; font-size: 12px; color: var(--text-main); outline: none; font-family: inherit; text-align: center;">
+                    <button id="password-login-submit" style="width: 100%; border: none; background: #1C1B1F; color: #FFFFFF; border-radius: 20px; padding: 12px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;">
+                        Sign In with Password
+                    </button>
+                </div>
+            </div>
+
             <!-- Client ID Configurator Drawer -->
             <div class="client-id-config-drawer" id="client-id-drawer">
                 <button class="config-toggle-btn" id="config-toggle-btn">🔧 Configure Google Client ID</button>
