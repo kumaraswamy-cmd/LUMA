@@ -542,11 +542,13 @@ function initFocusTimer() {
 
     // Play button toggle
     playBtn.addEventListener("click", () => {
+        const timerWrapper = document.querySelector(".circular-timer-wrapper");
         if(state.timer.isRunning) {
             // Pause
             clearInterval(state.timer.intervalId);
             state.timer.isRunning = false;
             playBtn.classList.remove("running");
+            if (timerWrapper) timerWrapper.classList.remove("running");
             playIcon.textContent = "▶";
             playText.textContent = "Start";
             if(statusText) statusText.textContent = "Paused";
@@ -554,6 +556,7 @@ function initFocusTimer() {
             // Resume/Start
             state.timer.isRunning = true;
             playBtn.classList.add("running");
+            if (timerWrapper) timerWrapper.classList.add("running");
             playIcon.textContent = "⏸";
             playText.textContent = "Pause";
             if(statusText) statusText.textContent = "Focus Session Active";
@@ -567,6 +570,7 @@ function initFocusTimer() {
                     clearInterval(state.timer.intervalId);
                     state.timer.isRunning = false;
                     playBtn.classList.remove("running");
+                    if (timerWrapper) timerWrapper.classList.remove("running");
                     playIcon.textContent = "▶";
                     playText.textContent = "Start";
                     state.streak += 1;
