@@ -659,7 +659,6 @@ function initAIChat() {
     const input = document.getElementById("chat-input-field");
     const sendBtn = document.getElementById("chat-send-trigger");
     const voiceBtn = document.getElementById("voice-speak-btn");
-    const scroller = document.getElementById("chat-scroller");
     const welcome = document.getElementById("chat-welcome-box");
     const history = document.getElementById("chat-history-log");
 
@@ -667,8 +666,8 @@ function initAIChat() {
         const text = input.value.trim();
         if(!text) return;
 
-        welcome.style.display = "none";
-        history.classList.add("active");
+        if (welcome) welcome.style.display = "none";
+        if (history) history.classList.add("active");
 
         // User bubble
         appendChatBubble(text, "user");
@@ -684,30 +683,37 @@ function initAIChat() {
         }, 1200);
     };
 
-    sendBtn.addEventListener("click", sendUserMessage);
-    input.addEventListener("keydown", (e) => {
-        if(e.key === "Enter") sendUserMessage();
-    });
+    if (sendBtn) {
+        sendBtn.addEventListener("click", sendUserMessage);
+    }
+    if (input) {
+        input.addEventListener("keydown", (e) => {
+            if(e.key === "Enter") sendUserMessage();
+        });
+    }
 
-    // Voice trigger mockup
-    voiceBtn.addEventListener("click", () => {
-        voiceBtn.textContent = "🎙️ Listening...";
-        voiceBtn.style.background = "var(--text-muted)";
-        
-        setTimeout(() => {
-            voiceBtn.textContent = "🎙️ Speak";
-            voiceBtn.style.background = "#1C1B1F";
-            input.value = "Need to review design specs in afternoon and code high priority";
-            sendUserMessage();
-        }, 2200);
-    });
+    // Voice trigger mockup (if button is present)
+    if (voiceBtn) {
+        voiceBtn.addEventListener("click", () => {
+            voiceBtn.textContent = "🎙️ Listening...";
+            voiceBtn.style.background = "var(--text-muted)";
+            
+            setTimeout(() => {
+                voiceBtn.textContent = "🎙️ Speak";
+                voiceBtn.style.background = "#1C1B1F";
+                input.value = "Need to review design specs in afternoon and code high priority";
+                sendUserMessage();
+            }, 2200);
+        });
+    }
 
     function appendChatBubble(text, sender) {
+        if (!history) return;
         const bubble = document.createElement("div");
         bubble.className = `chat-bubble ${sender}`;
         bubble.textContent = text;
         history.appendChild(bubble);
-        scroller.scrollTop = scroller.scrollHeight;
+        history.scrollTop = history.scrollHeight;
     }
 
     // Local natural language parser
