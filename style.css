@@ -117,7 +117,7 @@
 
 body {
     font-family: 'Outfit', sans-serif;
-    background-color: #E2E1DD;
+    background-color: var(--bg-app);
     color: var(--text-main);
     display: flex;
     justify-content: center;
@@ -130,25 +130,20 @@ body {
 }
 
 [data-theme="cosmic"] body {
-    background-color: #030305;
+    background-color: #0A0A10;
 }
 
-/* Base Outer Bezel Container - Adapts on Desktop vs Mobile */
+/* Base Outer Container - Full-screen layout optimization */
 .desktop-container {
     position: relative;
-    width: 100%;
-    max-width: 420px;
-    height: 92vh;
-    height: 92dvh;
-    max-height: 860px;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
     background-color: var(--bg-app);
-    border-radius: 40px;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.04);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    border: 8px solid #161618;
-    transition: background-color 0.4s ease, border-color 0.4s ease, max-width 0.5s cubic-bezier(0.16, 1, 0.3, 1), height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-color 0.4s ease, max-width 0.5s cubic-bezier(0.16, 1, 0.3, 1), height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Header style styling */
@@ -1310,24 +1305,25 @@ h1 {
    ========================================== */
 @media (min-width: 1024px) {
     body {
-        background-color: #E6E5E1;
-        padding: 24px;
+        background-color: var(--bg-app);
+        padding: 0;
     }
     
     [data-theme="cosmic"] body {
-        background-color: #06060A;
+        background-color: #0A0A10;
     }
 
     /* Transition layout to a wide dual-pane layout */
     .desktop-container {
-        max-width: 1020px;
-        height: 85vh;
-        max-height: 720px;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
         display: grid;
         grid-template-columns: 88px 1fr;
         grid-template-rows: auto 1fr;
-        border-radius: 28px;
-        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0,0,0,0.03);
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
     }
     
     /* Move nav to left sidebar, hide bottom bar structure */
@@ -1449,12 +1445,129 @@ h1 {
    ========================================== */
 @media (min-width: 600px) and (max-width: 1023px) {
     .desktop-container {
-        max-width: 580px;
-        height: 90vh;
-        border-radius: 34px;
+        max-width: none;
+        height: 100vh;
+        height: 100dvh;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
     }
 
     main {
         padding: 0 32px 110px;
     }
+}
+
+/* ==========================================
+   GOOGLE LOGIN SCREEN STYLING
+   ========================================== */
+.login-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background-color: var(--bg-app);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+}
+
+.login-screen.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.login-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-glass);
+    padding: 40px;
+    border-radius: 28px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 50px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: zoomInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes zoomInUp {
+    from { opacity: 0; transform: scale(0.95) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.login-logo {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 54px;
+    color: var(--text-muted);
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+}
+
+.login-mascot-container {
+    margin-bottom: 28px;
+}
+
+.login-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text-main);
+    line-height: 1.25;
+    margin-bottom: 12px;
+}
+
+.login-subtitle {
+    font-size: 13.5px;
+    color: var(--text-light);
+    line-height: 1.45;
+    margin-bottom: 32px;
+}
+
+.google-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px;
+    border-radius: 24px;
+    border: 1.5px solid var(--border-glass);
+    background-color: #FFFFFF;
+    color: #1C1B1F;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.google-login-btn:hover {
+    background-color: #FAF9F6;
+    border-color: var(--text-muted);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.google-login-btn:active {
+    transform: translateY(0);
+}
+
+.google-icon {
+    flex-shrink: 0;
+}
+
+.login-footer {
+    font-size: 11px;
+    color: var(--text-light);
+    opacity: 0.8;
+    margin-top: 24px;
+    line-height: 1.4;
 }

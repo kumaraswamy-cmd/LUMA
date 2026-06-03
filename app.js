@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initTasks();
     initFocusTimer();
     initAIChat();
+    initGoogleLogin();
     
     // Initial renders
     renderTasks();
@@ -676,5 +677,60 @@ function initAIChat() {
         const greet = greetings[Math.floor(Math.random() * greetings.length)];
         
         return `${greet} I've added "${cleanText}" under your ${targetBlock.toUpperCase()} block and assigned it ${targetPriority.toUpperCase()} priority. ✨`;
+    }
+}
+
+// Google Login Mock OAuth handler
+function initGoogleLogin() {
+    const loginScreen = document.getElementById("login-screen");
+    const loginBtn = document.getElementById("google-login-btn");
+    
+    // Check localStorage for prior login state
+    const savedUser = localStorage.getItem("luma_logged_in");
+    if (savedUser) {
+        loginScreen.classList.add("hidden");
+        updateProfileName(savedUser);
+    }
+    
+    loginBtn.addEventListener("click", () => {
+        loginBtn.disabled = true;
+        loginBtn.style.opacity = "0.8";
+        loginBtn.innerHTML = `
+            <svg style="animation: spin 1s linear infinite; margin-right: 8px;" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3">
+                <circle cx="12" cy="12" r="10" stroke="rgba(0,0,0,0.1)"></circle>
+                <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
+            </svg>
+            <span>Connecting Google Account...</span>
+        `;
+        
+        // Inject keyframes dynamically if not present
+        if (!document.getElementById("spin-keyframes")) {
+            const style = document.createElement("style");
+            style.id = "spin-keyframes";
+            style.innerHTML = "@keyframes spin { to { transform: rotate(360deg); } }";
+            document.head.appendChild(style);
+        }
+        
+        setTimeout(() => {
+            const mockName = "Nihal Kumar";
+            localStorage.setItem("luma_logged_in", mockName);
+            
+            // Slide out login overlay
+            loginScreen.classList.add("hidden");
+            updateProfileName(mockName);
+        }, 1500);
+    });
+}
+
+function updateProfileName(name) {
+    const profileHeader = document.querySelector("#stats-view h1");
+    if (profileHeader) {
+        profileHeader.textContent = name;
+    }
+    // Also personalize header welcome if appropriate
+    const welcomeTitle = document.getElementById("daily-day-title");
+    if (welcomeTitle) {
+        const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+        welcomeTitle.textContent = `${today}`;
     }
 }
