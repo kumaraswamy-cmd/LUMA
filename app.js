@@ -1,24 +1,15 @@
 // State Management
 const state = {
-    tasks: [
-        { id: 1, text: "Refactor database migrations", completed: true, block: "morning", priority: "high" },
-        { id: 2, text: "Morning exercise session", completed: true, block: "morning", priority: "medium" },
-        { id: 3, text: "Buy green tea & fresh milk", completed: true, block: "anytime", priority: "low" },
-        { id: 4, text: "Review PR for frontend tweaks", completed: true, block: "afternoon", priority: "high" },
-        { id: 5, text: "Plan team lunch event", completed: true, block: "anytime", priority: "medium" },
-        { id: 6, text: "Schedule dentist appointment", completed: true, block: "afternoon", priority: "low" },
-        { id: 7, text: "Water plants on balcony", completed: true, block: "evening", priority: "low" },
-        { id: 8, text: "Read two chapters of sci-fi novel", completed: true, block: "evening", priority: "medium" },
-        { id: 9, text: "Write weekly progress report", completed: true, block: "morning", priority: "high" },
-        { id: 10, text: "Update app store screenshots", completed: true, block: "afternoon", priority: "high" },
-        { id: 11, text: "Draft design systems deck", completed: false, block: "afternoon", priority: "medium" },
-        { id: 12, text: "Clean office desk setup", completed: false, block: "anytime", priority: "low" },
-        { id: 13, text: "Prepare salad for dinner", completed: false, block: "evening", priority: "medium" },
-        { id: 14, text: "Configure Webpack configuration", completed: false, block: "morning", priority: "high" }
-    ],
-    streak: 2,
-    streakGoal: 3,
-    theme: "mist",
+    tasks: (() => {
+        try {
+            return JSON.parse(localStorage.getItem("taskly_tasks")) || [];
+        } catch(e) {
+            return [];
+        }
+    })(),
+    streak: parseInt(localStorage.getItem("taskly_streak")) || 0,
+    streakGoal: parseInt(localStorage.getItem("taskly_streak_goal")) || 7,
+    theme: localStorage.getItem("taskly_theme") || "mist",
     timer: {
         totalSeconds: 15 * 60,
         remainingSeconds: 15 * 60,
@@ -31,6 +22,13 @@ const state = {
         activeTrack: null
     }
 };
+
+function saveLocalStorageState() {
+    localStorage.setItem("taskly_tasks", JSON.stringify(state.tasks));
+    localStorage.setItem("taskly_streak", state.streak);
+    localStorage.setItem("taskly_streak_goal", state.streakGoal);
+    localStorage.setItem("taskly_theme", state.theme);
+}
 
 // SVG Progress constants
 const TIMER_CIRCUMFERENCE = 628; // 2 * PI * 100
@@ -92,6 +90,14 @@ function initNavigation() {
         document.querySelector('[data-target="todo-view"]').click();
         document.getElementById("global-todo-input").focus();
     });
+
+    // Header User Avatar click links to Stats page
+    const avatarBubble = document.getElementById("user-avatar-bubble");
+    if (avatarBubble) {
+        avatarBubble.addEventListener("click", () => {
+            document.querySelector('[data-target="stats-view"]').click();
+        });
+    }
 }
 
 // State helpers
@@ -125,6 +131,7 @@ function initTasks() {
             
             state.tasks.push(newTask);
             input.value = "";
+            saveLocalStorageState();
             renderTasks();
             updateHeaderStats();
             updateStatsPage();
@@ -153,6 +160,7 @@ function initTasks() {
         });
         
         globalInput.value = "";
+        saveLocalStorageState();
         renderTasks();
         updateHeaderStats();
         updateStatsPage();
@@ -215,6 +223,7 @@ function renderTasks() {
                     state.streak += 1;
                 }
             }
+            saveLocalStorageState();
             renderTasks();
             updateHeaderStats();
             updateStatsPage();
@@ -225,6 +234,7 @@ function renderTasks() {
         delBtn.addEventListener("click", (e) => {
             e.stopPropagation();
             state.tasks = state.tasks.filter(t => t.id !== task.id);
+            saveLocalStorageState();
             renderTasks();
             updateHeaderStats();
             updateStatsPage();
@@ -245,6 +255,7 @@ function renderTasks() {
             cloneCb.addEventListener("click", (e) => {
                 e.stopPropagation();
                 task.completed = !task.completed;
+                saveLocalStorageState();
                 renderTasks();
                 updateHeaderStats();
                 updateStatsPage();
@@ -253,6 +264,7 @@ function renderTasks() {
             cloneDel.addEventListener("click", (e) => {
                 e.stopPropagation();
                 state.tasks = state.tasks.filter(t => t.id !== task.id);
+                saveLocalStorageState();
                 renderTasks();
                 updateHeaderStats();
                 updateStatsPage();
@@ -260,6 +272,27 @@ function renderTasks() {
 
             lists[targetPriority].appendChild(priorityClone);
             counts[targetPriority]++;
+        }
+    });
+
+    // Check for empty states and inject indicators
+    Object.entries(lists).forEach(([key, container]) => {
+        if (container && container.children.length === 0) {
+            const emptyEl = document.createElement("div");
+            emptyEl.className = "empty-state";
+            
+            // Customize empty message by block/priority
+            let msg = "No tasks scheduled";
+            if (key === "high") msg = "No high priority tasks";
+            else if (key === "medium") msg = "No medium priority tasks";
+            else if (key === "low") msg = "No low priority tasks";
+            else if (key === "general") msg = "All caught up!";
+            else if (key === "morning") msg = "Morning is clear";
+            else if (key === "afternoon") msg = "Afternoon is clear";
+            else if (key === "evening") msg = "Evening is clear";
+            
+            emptyEl.textContent = msg;
+            container.appendChild(emptyEl);
         }
     });
 
@@ -298,24 +331,39 @@ function initMascotTracking() {
 // Stats & Themes configuration page
 function initThemeSelector() {
     const groups = document.querySelectorAll(".theme-sphere-group");
+    
+    // Apply startup theme or saved theme
+    const applyTheme = (themeName) => {
+        document.documentElement.setAttribute("data-theme", themeName);
+        state.theme = themeName;
+        saveLocalStorageState();
+
+        groups.forEach(g => {
+            if (g.getAttribute("data-theme-name") === themeName) {
+                g.classList.add("active");
+            } else {
+                g.classList.remove("active");
+            }
+        });
+
+        // Dynamically update mobile browser toolbar/status bar color for seamless PWA integration
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) {
+            let barColor = "#F5F4F0";
+            if (themeName === "sunset") barColor = "#FAF2EB";
+            else if (themeName === "aurora") barColor = "#F2FAF6";
+            else if (themeName === "cosmic") barColor = "#0A0A10";
+            metaTheme.setAttribute("content", barColor);
+        }
+    };
+
+    // Apply active theme
+    applyTheme(state.theme);
+
     groups.forEach(group => {
         group.addEventListener("click", () => {
-            groups.forEach(g => g.classList.remove("active"));
-            group.classList.add("active");
-            
             const themeName = group.getAttribute("data-theme-name");
-            document.documentElement.setAttribute("data-theme", themeName);
-            state.theme = themeName;
-
-            // Dynamically update mobile browser toolbar/status bar color for seamless PWA integration
-            const metaTheme = document.querySelector('meta[name="theme-color"]');
-            if (metaTheme) {
-                let barColor = "#F5F4F0";
-                if (themeName === "sunset") barColor = "#FAF2EB";
-                else if (themeName === "aurora") barColor = "#F2FAF6";
-                else if (themeName === "cosmic") barColor = "#0A0A10";
-                metaTheme.setAttribute("content", barColor);
-            }
+            applyTheme(themeName);
         });
     });
 }
@@ -541,6 +589,7 @@ function initFocusTimer() {
                     playIcon.textContent = "▶";
                     playText.textContent = "Start";
                     state.streak += 1;
+                    saveLocalStorageState();
                     updateHeaderStats();
                     updateStatsPage();
                     if(statusText) statusText.textContent = "Session Complete!";
@@ -689,6 +738,7 @@ function initAIChat() {
             block: targetBlock,
             priority: targetPriority
         });
+        saveLocalStorageState();
 
         // AI Response Text
         const greetings = ["Done!", "Got it!", "Alright!", "Scheduled!"];
@@ -714,10 +764,11 @@ function initGoogleLogin() {
     // Check localStorage for prior login state
     const savedUser = localStorage.getItem("luma_logged_in");
     const savedPic = localStorage.getItem("luma_profile_pic");
+    const savedEmail = localStorage.getItem("luma_email");
     
     if (savedUser) {
         loginScreen.classList.add("hidden");
-        updateProfileName(savedUser, savedPic);
+        updateProfileName(savedUser, savedPic, savedEmail);
     }
 
     // Default development client ID (replaceable by user in UI)
@@ -773,6 +824,26 @@ function initGoogleLogin() {
         }
     });
 
+    // Bind real sign-out button
+    const signoutBtn = document.getElementById("profile-signout-btn");
+    if (signoutBtn) {
+        signoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("luma_logged_in");
+            localStorage.removeItem("luma_profile_pic");
+            localStorage.removeItem("luma_email");
+            
+            // Show login screen
+            loginScreen.classList.remove("hidden");
+            
+            // Reset UI credentials
+            updateProfileName("Guest User", "", "Not signed in");
+            
+            if (typeof google !== 'undefined' && google.accounts) {
+                google.accounts.id.disableAutoSelect();
+            }
+        });
+    }
+
     // Parse the JWT token payload
     function handleCredentialResponse(response) {
         try {
@@ -786,7 +857,7 @@ function initGoogleLogin() {
                 
                 // Hide login screen
                 loginScreen.classList.add("hidden");
-                updateProfileName(profile.name, profile.picture);
+                updateProfileName(profile.name, profile.picture, profile.email);
             }
         } catch (error) {
             console.error("Failed to login with Google:", error);
@@ -810,10 +881,10 @@ function initGoogleLogin() {
     }
 }
 
-function updateProfileName(name, avatarUrl) {
+function updateProfileName(name, avatarUrl, email) {
     const profileHeader = document.querySelector("#stats-view h1");
     if (profileHeader) {
-        profileHeader.textContent = name;
+        profileHeader.textContent = "Your Progress";
     }
     
     // Header date personalization
@@ -825,8 +896,28 @@ function updateProfileName(name, avatarUrl) {
 
     // Update Avatar image bubble in header if available
     const avatarBubble = document.getElementById("user-avatar-bubble");
-    if (avatarBubble && avatarUrl) {
-        avatarBubble.style.backgroundImage = `url('${avatarUrl}')`;
-        avatarBubble.style.display = "block";
+    if (avatarBubble) {
+        if (avatarUrl) {
+            avatarBubble.style.backgroundImage = `url('${avatarUrl}')`;
+            avatarBubble.style.display = "block";
+        } else {
+            avatarBubble.style.backgroundImage = "none";
+            avatarBubble.style.display = "none";
+        }
+    }
+
+    // Update profile card elements
+    const cardName = document.getElementById("profile-card-name");
+    const cardEmail = document.getElementById("profile-card-email");
+    const cardAvatar = document.getElementById("profile-card-avatar");
+
+    if (cardName) cardName.textContent = name || "Guest User";
+    if (cardEmail) cardEmail.textContent = email || "Not signed in";
+    if (cardAvatar) {
+        if (avatarUrl) {
+            cardAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+        } else {
+            cardAvatar.style.backgroundImage = "none";
+        }
     }
 }
